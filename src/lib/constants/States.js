@@ -1,0 +1,9 @@
+export const intro = '@state/INTRO';
+export const question = '@state/QUESTION';
+export const newTicket = '@state/NEW_TICKET';
+export const findTicket = '@state/FIND_TICKET';
+export const pending = '@state/PENDING';
+export const done = '@state/DONE';
+export const error = '@state/ERROR';
+export const noResults = '@state/NO_RESULTS';
+export const itemOrdered = '@state/ITEM_ORDERED';

@@ -1,0 +1,1 @@
+export const ANSWER = '@state/ANSWER';
