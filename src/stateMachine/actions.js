@@ -1,6 +1,11 @@
 import { assign } from 'xstate';
 import getQuestionByStateKey from '../lib/getQuestionByStateKey';
-import { intro, newTicket, findTicket } from '../lib/constants/States';
+import {
+  intro,
+  newTicket,
+  findTicket,
+  pingTicket
+} from '../lib/constants/States';
 
 const updateQuery = (ctx, { data }) => {
   const { value, key } = data;
@@ -10,10 +15,9 @@ const updateQuery = (ctx, { data }) => {
   };
 
   return byKey[key] ? byKey[key]() : {};
+};
 
-}
-
-const updateChat = (ctx, { data }) => 
+const updateChat = (ctx, { data }) =>
   ctx.chat.map((chatItem) =>
     chatItem.key === data.key
       ? {
@@ -21,11 +25,11 @@ const updateChat = (ctx, { data }) =>
           answer: data.label
         }
       : chatItem
-  )
+  );
 
 export const updateCtxWithAnswer = assign({
   query: updateQuery,
-  chat: updateChat,
+  chat: updateChat
 });
 
 export const updateCtxWithResults = assign({
@@ -40,3 +44,14 @@ const askQuestion = (key) =>
 export const askIntroQuestion = askQuestion(intro);
 export const askNewTicket = askQuestion(newTicket);
 export const askFindTicket = askQuestion(findTicket);
+export const askPingTicket = askQuestion(pingTicket);
+
+export const skipPing = assign({
+  chat: (ctx) =>
+    updateChat(ctx, {
+      data: {
+        key: pingTicket,
+        label: 'No'
+      }
+    })
+});

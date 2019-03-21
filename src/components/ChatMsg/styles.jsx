@@ -20,7 +20,11 @@ export const TextContainer = styled('div')`
 
 export const Text = styled('div')`
   ${(props) =>
-    props.borderColor && `border-left: 4px solid ${props.borderColor}`};
+    props.borderColor &&
+    `
+      border-left: 4px solid ${props.borderColor};
+      border-right: 4px solid ${props.borderColor};
+    `}
   border-radius: ${border.radius};
   height: 100%;
   background: ${colors.bgSecondary};

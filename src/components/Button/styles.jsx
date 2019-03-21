@@ -4,8 +4,6 @@ import { colors, spacing } from '../../lib/constants/Styles';
 export const BaseButton = styled('button')`
   cursor: pointer;
   border-radius: 2px;
-  font-size: 14px;
-  font-weight: 400;
   padding: ${spacing.small} ${spacing.medium};
   text-decoration: none;
   display: flex;

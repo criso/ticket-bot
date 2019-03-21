@@ -11,8 +11,12 @@ class FindTicketForm extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
 
-    if (this.input.current.value) {
-      this.props.onSelect(this.input.current.value);
+    const { value } = this.input.current;
+    if (value) {
+      this.props.onSelect({
+        label: value,
+        value
+      });
     }
   };
 

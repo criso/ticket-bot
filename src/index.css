@@ -9,6 +9,33 @@
   src: local('Rokkit'), url(./fonts/Rokkitt-Regular.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'VT323';
+  src: local('VT323'), url(./fonts/VT323-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Bangers';
+  src: local('Bangers'), url(./fonts/Bangers-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Lobster';
+  src: local('Lobster'), url(./fonts/Lobster-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  src: local('Space Mono'),
+    url(./fonts/SpaceMono-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Special Elite';
+  src: local('Special Elite'),
+    url(./fonts/SpecialElite-Regular.ttf) format('truetype');
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -21,7 +48,8 @@ input,
 textarea,
 select,
 button {
-  font-family: 'Operator mono';
+  font-size: 14px;
+  font-family: 'Montserrat';
 }
 
 * {

@@ -6,4 +6,7 @@ export const pending = '@state/PENDING';
 export const done = '@state/DONE';
 export const error = '@state/ERROR';
 export const noResults = '@state/NO_RESULTS';
+export const pingTicket = '@state/PING_TICKET';
+export const shouldSkip = '@state/SHOULD_SKIP';
+export const skipped = '@state/SKIPPED';
 export const itemOrdered = '@state/ITEM_ORDERED';
