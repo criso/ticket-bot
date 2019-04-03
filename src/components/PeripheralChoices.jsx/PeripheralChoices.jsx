@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { shape, arrayOf, string, func, bool, object } from 'prop-types';
+import IconLaptop from '@material-ui/icons/Laptop';
+import IconMouse from '@material-ui/icons/Mouse';
+import IconMonitor from '@material-ui/icons/Tv';
 import MultipleChoice from '../MultipleChoice';
 
 const defaultProps = {
   options: [
-    { value: 'monitor', label: 'Monitor' },
-    { value: 'laptop', label: 'Laptop' },
-    { value: 'mouse', label: 'Mouse' }
+    {
+      value: 'monitor',
+      label: (
+        <Fragment>
+          <IconMonitor /> Monitor
+        </Fragment>
+      )
+    },
+    {
+      value: 'laptop',
+      label: (
+        <Fragment>
+          <IconLaptop /> Laptop
+        </Fragment>
+      )
+    },
+    {
+      value: 'mouse',
+      label: (
+        <Fragment>
+          <IconMouse /> Mouse
+        </Fragment>
+      )
+    }
   ]
 };
 

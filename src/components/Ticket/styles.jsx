@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { spacing } from '../../lib/constants/Styles';
+import { spacing, colors } from '../../lib/constants/Styles';
 
 export const Section = styled('section')`
   display: flex;
   justify-content: center;
-  height: 100%;
+  height: 100vh;
+  background: ${colors.chatBg};
 `;
 
 export const ChatContainer = styled('div')`

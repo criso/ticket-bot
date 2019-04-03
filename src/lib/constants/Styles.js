@@ -11,11 +11,16 @@ export const border = {
 };
 
 export const colors = {
-  text: '#222',
-  border: '#DDD',
+  chatBg: '#17212b',
+  text: '#FFF',
+  questionBg: '#223143',
+  answerBg: '#2f6ea5',
 
-  bgSecondary: '#F6F7F8',
-  bgPrimary: '#0996DF',
+  buttonBg: '#387ebb',
+  border: '#6ab3f3',
+  bgSecondary: '#223143',
+  bgPrimary: '#2f6ea5',
+
   warning: '#F0AD4E',
   success: '#4FA500',
   error: '#E54E5B'

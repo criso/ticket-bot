@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { shape, arrayOf, string } from 'prop-types';
+import IconNew from '@material-ui/icons/FiberNew';
+import IconFind from '@material-ui/icons/FindInPage';
 import MultipleChoice from '../MultipleChoice';
 
 const defaultProps = {
   options: [
-    { value: 'new_ticket', label: 'create new ticket' },
-    { value: 'find_ticket', label: 'existing ticket' }
+    {
+      value: 'new_ticket',
+      label: (
+        <Fragment>
+          <IconNew /> Create New Ticket
+        </Fragment>
+      )
+    },
+    {
+      value: 'find_ticket',
+      label: (
+        <Fragment>
+          <IconFind />
+          Find Existing Ticket
+        </Fragment>
+      )
+    }
   ]
 };
 

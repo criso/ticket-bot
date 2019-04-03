@@ -1,6 +1,6 @@
 import React, { Component } from 'react'; /*eslint-disable-line */
 import { StateMachine } from 'xstate'; /*eslint-disable-line */
-import Container from './TicketContainer';
+import TicketContainer from './TicketContainer';
 import configureMachine from '../stateMachine/configureMachine';
 
 const logState = (state) => {
@@ -35,4 +35,4 @@ const withMachine = (WrappedComponent, logState = getLogger()) => {
   return Wrapped;
 };
 
-export default withMachine(Container);
+export default withMachine(TicketContainer);

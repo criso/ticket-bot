@@ -27,8 +27,8 @@ export const Text = styled('div')`
     `}
   border-radius: ${border.radius};
   height: 100%;
-  background: ${colors.bgSecondary};
-  padding: ${spacing.medium};
+  background: ${colors.questionBg};
+  padding: ${spacing.xsmall} ${spacing.medium};
   color: ${colors.text};
   align-items: center;
   display: flex;
@@ -37,6 +37,28 @@ export const Text = styled('div')`
     font-size: ${spacing.large};
     margin-right: ${spacing.small};
   }
+
+  svg {
+    margin-right: ${spacing.small};
+  }
+
+
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: 11px solid transparent;
+    border-right-color: ${colors.questionBg};
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -11px;
+    margin-left: -8px;
+  }
+
 `;
 
 export const AnswerContainer = styled(Container)`
@@ -48,8 +70,23 @@ export const AnswerTextContainer = styled(TextContainer)`
 `;
 
 export const AnswerText = styled(Text)`
-  background: ${colors.bgPrimary};
+  background: ${colors.answerBg};
   color: #fff;
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    left: auto;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: 11px solid transparent;
+    border-left-color: ${colors.answerBg};
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -11px;
+    margin-right: -8px;
+  }
 `;
 
 export const ChatLine = styled('div')`

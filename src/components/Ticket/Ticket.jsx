@@ -51,7 +51,7 @@ const Ticket = ({ currentState, onSelect }) => (
         <ChatFooter onSelect={onSelect} currentState={currentState} />
       </ChatContainer>
     </Section>
-    <FontSelector />
+    {/* <FontSelector /> */}
   </React.Fragment>
 );
 

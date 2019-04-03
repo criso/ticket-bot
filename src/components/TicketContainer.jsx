@@ -43,7 +43,6 @@ class TicketContainer extends Component {
   };
 
   handleSelect = ({ label, value, key }) => {
-    console.warn({ label, value });
     this.service.send({
       type: ANSWER,
       data: {
