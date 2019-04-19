@@ -12,13 +12,18 @@ export const BaseButton = styled('button')`
 
   &:hover {
     border: 1px solid ${colors.border};
+
+    transition: all 800ms;
+    background: #cddc39;
+    color: #222;
     svg {
       transform: scale(1.3);
     }
   }
 
   svg {
-    transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+
     margin-right: ${spacing.small};
   }
 `;
@@ -29,14 +34,25 @@ export const PrimaryButton = styled(BaseButton)`
 `;
 
 export const SecondaryButton = styled(BaseButton)`
-  background: ${colors.bgSecondary};
+  background: #ddd;
   color: #000;
 `;
 
 export const DisabledButton = styled(BaseButton)`
-  pointer-events: none;
-  cursor: default;
-  background: ${colors.bgSecondary};
+  background: #fafafa;
+
+  cursor: not-allowed;
   color: #999;
   border: none;
+
+  svg {
+    transition: none;
+  }
+
+  &:hover {
+    border: none;
+    svg {
+      transform: none;
+    }
+  }
 `;

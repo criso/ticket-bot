@@ -1,5 +1,5 @@
 import React from 'react';
-import { func, arrayOf, shape, string } from 'prop-types';
+import { func, arrayOf, shape, string, node } from 'prop-types';
 import { Section, Options, Option } from './styles';
 import Button from '../Button';
 
@@ -8,7 +8,7 @@ const propTypes = {
   options: arrayOf(
     shape({
       value: string,
-      label: string
+      label: node
     })
   ).isRequired
 };

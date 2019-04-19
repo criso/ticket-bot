@@ -1,56 +1,38 @@
-TOC
+---
+title: Pure UI using Xstate and ReactJS
+published: false
+description: We're gonna go over what state machines are and how a statechart, which is like "state machine 2.0", can help you build more robust applications.
+tags: #reactjs, #xstate, #statechart, #javascript
+---
 
-### Intro
+We're gonna go over what state machines are and how a statechart, which is like "state machine 2.0", can help you build more robust applications.
 
-xstate is a `statechart` library.
-Statecharts are an extenstion of state machines that work better in real world applications.
+We'll be using `xstate`, which is a `statechart` library and reactJS. But you could be replace `reactJS` with any other framework really.
 
-### Two types of state
+The overall goal is to reduce cognitive load when developing your UI, by having your UI be a function of state.
 
-There are two types of state.
+| current state |                UI                |
+| ------------- | :------------------------------: |
+| list          |            show list             |
+| list.loading  | show specific list loading image |
+| noResults     |     show no results message      |
 
-1. State of your app. These answer questions like:
+### A State Machine?
 
-- "is it loading?"
-- "is there an error?"
-- "are we waiting for user input?"
-- "are we fetching user data?"
+The term state machine has always felt a bit weird to me.
+It might be easier to initially see it as:
 
-The answers here determine **which** view is used:
-
-```jsx
-{
-  error && <Error />;
-}
-```
-
-2. Stateful data, called `context` in `xState`. These answer questions like:
-
-- "what is the error message?"
-- "what are the results from the api request?"
-- "which filter/option is currently selected?"
-
-Answering these questions determines **what** properties a view has:
-
-```jsx
-<Error msg={context.errorMsg}>
-```
-
-### Machine?
-
-- the term machine from state machine always felt a bit abstract to me.
-  For our use case, it may be easier to see it as:
-
-A function that does things based on input **AND** the current state of your app.
+> A function that does things that are related ONLY to the _current state_ of the app with the given input.
 
 ```js
-const appState = "isLoading";
+const currentState = "isLoading";
 function machine(input) {
-  if (appState === "isLoading") {
-    // do loading things with `input`
+  if (currentState === "isLoading") {
+    // *only* do things related to `isLoading` state with `input`
   }
-  if (appState === "isError") {
-    // do errror things with `input`
+
+  if (currentState === "isError") {
+    // *only* do things related to `isError` state with `input`
   }
 }
 ```
@@ -58,25 +40,22 @@ function machine(input) {
 Here's a familiar state machine:
 
 ```js
-// state is `idle`
-fetch() // state is `fetching`
+// currentState is `idle`
+
+fetch() // currentState is `fetching`
 .then(
   (successResults) => {
-    // state is 'success'
-    // app state is 'successResults'
+    //  currentState is 'success'
+    // stateful data is 'successResults'
   }
   (errorMsg) => {
-    // state is 'error' */
-    // errorMsg is 'errorMsg' */
+    // currentState is 'error'
+    // stateful data is 'errorMsg'
   }
 );
-
-// NOTE: state here is different than the data that is returned
 ```
 
-The biggest thing to note here is that the `app state` can only be **one thing** at a time.
-
-So, you don't run into this:
+Since,`currentState` can only be **one thing** at a time, you don't run into these checks:
 
 ```js
  // NOPE, NOPE, NOPE
@@ -85,36 +64,109 @@ if (!isLoading && isError) // ...
 if (isLoading && isError) // ...
 ```
 
+### Two types of state
+
+There are two types of state:
+
+1. Current State of your app. These answer questions like:
+
+- "is it loading?"
+- "is there an error?"
+- "are we fetching user data?"
+
+The answers here will determine which **component** is used:
+
+```jsx
+if (currentState === "error") {
+  return <Error />;
+}
+```
+
+2. Stateful data. This is called `context` in `xState`.
+   These answer questions like:
+
+- "what is the error message?"
+- "what are the results from the API request?"
+- "which filter/option is currently selected?"
+
+The answers here will determine which **props** a component has:
+
+```jsx
+if (currentState === 'error') {
+  return <Error msg={context.errorMsg}>
+}
+```
+
 ### Tell me which state we're in and I'll tell you what the UI looks like
 
-UI should be a function of state.
-This is different than UI being a function of the data we currently have.
+The UI should be a function of the state.
+This is different from having the UI be a function of the data we currently have.
 
-This means that:
+:thumbsup: Function of state:
 
-`State: list.noResults` => UI displays 'No results found.'
-`State: list.isError` => UI displays 'There was an error loading your request'
+```js
+if (currentState === list.noResults) {
+  return "No Results found";
+}
+
+if (currentState === list.isError) {
+  return "Oops!";
+}
+```
 
 #### vs.
 
-`{ list: [] }` => "list is empty, so we probably don't have any results #YOLO"
-`{ list {err: 'failed' }}` => "we have a string in `err` #YOLO"
+:thumbsdown: Data that we currently have:
 
-This is an important distinction.
+```js
+if (list.length === 0) {
+  // the list is empty, so we probably don't have any results"
+  return "No Results found";
+}
+
+if (list.errMsg) {
+  // list.err is not empty, show an error message #yolo
+  return "Oops";
+}
+```
+
+##### :point_up: This is an important distinction. :point_up:
+
 The conversation here shifts from:
 
 > "What do we do if we have zero results ?"
+> Remember:
+> We could have zero results because of an error, we haven't fetched anything yet, or we really don't have any results. Each one of these is a **different** state.
 
 To:
 
-> "What does the UI look like **WHEN** we're in a `noResults` state?"
+> "What does the UI look like **when** we're in a `error`, `initial` or `noResults` state?"
 
-You're now building your UI to account for that state everywhere.
-Does the title change? Do the icons change? Does something become disabled? Should there be a try again button?
+You're now building your UI to account for each state.
 
-### State Machine Configuration
+> Does the title change?
+> Do the icons change?
+> Does something become disabled?
+> Should there be a try again button?
 
-It's cool to configure a state machine to a point where the vast majority of your UI logic can be understood from it.
+### State Chart Configuration
+
+A State Chart is a state machine that can contain other state machines... and more!
+
+At the base of all of this is the configuration for your statechart.
+
+You declare:
+
+- the possible states that can exist `loading, error, noResults, listing, details, etc..`
+- the `actions/events` that can happen within **each** state:
+  `action/TRY_AGAIN` => can only happen if we're in the `listing.error` state
+- the `conditionals/guards`, needed to pass before moving on to a different state e.g:
+  We will only move to the `noResults` state if we
+  have a success response and `total === 0`
+
+It's cool to configure a state machine where the vast majority of your UI logic can be understood from it.
+
+Try to understand the config below before seeing the explanation of it:
 
 ```js
 // guards.js - conditional functions used to determine what the next step in the flow is
@@ -174,6 +226,8 @@ const config = Machine({
 });
 ```
 
+![image](https://media.giphy.com/media/xUPGcJRMK0NxGNEkKY/giphy.gif)
+
 #### The snippet above reads as:
 
 - initial state is `intro` from _states.intro_
@@ -190,96 +244,132 @@ const config = Machine({
 
 #### And can be visualized at https://statecharts.github.io/xstate-viz/
 
-![image](chart-viz-1.jpg)
+![image](https://thepracticaldev.s3.amazonaws.com/i/3h1cvpqtpeztlukabuia.jpg)
 
-The great thing about this visualization is that it's built from the actual code.
+YO! This visualization is built from the actual code!
+
+I :heart: THIS!
+
 These aren't code comments or a `spec-32.pdf` on the shared hard drive that hasn't been updated in 8 months.
 
-This is legit.
+Imagine how much this helps drive conversations about the product flow and how it aligns stakeholders around what each state of the app is.
 
-This helps drive conversations about the product flow and can align stakeholders around what each state of the app is.
+It becomes clear if there is an `error` state,  
+or if there should be a `noResults` vs. an `error` state
 
-It becomes clear if there is an `error` state.  
-Or if there should be a `noResults` vs. an `error` state
+## Okay... Let's build a chatbot flow
 
-## Lets build a chat bot flow
+![image](https://thepracticaldev.s3.amazonaws.com/i/miqglabh6eg9s8j4y5g2.gif)
 
-looks like:
-< IMAGE HERE>
+Here's the spec and flow... boring I know... but stay with me here.
 
-> SPEC:
->
-> As a user I want to be able to:
->
-> 1.  create a new ticket to order something
-> 2.  find an existing ticket
->
-> [Create new ticket]
->
-> - when ordering an item, if there aren't any more items in stock, offer the user a chance to order something else
->
-> [Find ticket]
->
-> - if found, ask the user if they would like to send a "ping" to that order
+### SPEC:
 
-## FLOW
+As a user I want to be able to:
 
-#### Intro
+1.  Create a new ticket to order something
+2.  Find an existing ticket
+3.  There should be `loading` states and `error` states if applicable
 
-- show chat message `How may I help you today?`
-- show options => `[Create new Ticket] [Inquire Existing Ticket]`
+`Create new ticket`
 
-#### Create Ticket
+- when ordering an item:
+  - if we don't have that item in stock:
+    - show a warning message
+    - show item options with the out of stock item greyed out
+    - user should be able to select from options again
+  - if we have the item in stock:
+    - show success message
+  - if there's an error
+    - show error message
 
-- show chat message `what would you like to order?`
-- show new ticket options => `[monitor] [laptop] [mouse]`
-  - on Ticket option selection:
-    - request item selected from api
-      - if `Loading`
-        - show loading chat mesage
-      - on `Error`
-        - show an error message
-      - on `Success`
-        - if we don't have that item in stock:
-          - show a warning message
-          - show item options with the out of stock item grayed out
-          - user should be able to select from options again
-        - if we have the item in stock:
-          - show success message
+`Find ticket`
 
-#### Find Exisiting Ticket
+- if found:
 
-- show chat message `Please enter ticket number`
-- show select box with possible ticket numbers
-  - on Ticket option selection:
-    - request ticket selected from api
-      - if `Loading`
-        - show loading chat mesage
-      - on `Error`
-        - show an error message
-      - on `Success`
-        - if we have the ticket:
-          - display what was ordered
-        - if we don't have the ticket:
-          - display warning message
-          - show button to create new ticket
+  - display what was ordered
+  - ask the user if they would like to send a "ping" to that order
 
-            - on create new ticket goto `[Create Ticket]` flow
+- if not found:
+  - display a warning msg
+  - ask the user if they would like to create a new ticket
 
-### Render component per state
+Here's a bit of the machine config:
+
+```js
+const flowMachine = Machine({
+  initial: intro,
+  states: {
+    [intro]: {
+      initial: question,
+      on: {
+        [ANSWER]: [
+          {
+            target: newTicket,
+            cond: "shouldCreateNewTicket",
+            actions: "updateCtxWithAnswer"
+          },
+          {
+            target: findTicket,
+            cond: "shouldFindTicket",
+            actions: "updateCtxWithAnswer"
+          }
+        ]
+      },
+      states: {
+        [question]: { onEntry: "askIntroQuestion" }
+      }
+    },
+
+    [findTicket]: {
+      initial: question,
+      on: {
+        [ANSWER]: { target: `.${pending}`, actions: 'updateCtxWithAnswer' }
+      },
+      states: {
+        [question]: { onEntry: 'askFindTicket' },
+        [error]: {},
+        [noResults]: {},
+        [pending]: {
+          invoke: {
+            src: 'getTicket',
+            onDone: [
+              {
+                target: done,
+                actions: 'updateCtxWithResults',
+                cond: 'foundTicket'
+              },
+              { target: noResults }
+            ],
+            onError: error
+          }
+        },
+        [done]: { type: 'final' }
+      },
+      onDone: pingTicket
+  }
+});
+```
+
+- in `findTicket`:
+- Once the user answers the question, we'll move onto the `pending` state where we'll invoke a `promise` called `getTicket`
+- if there is an error:
+  - we move to the `error` state
+- else
+  - if `foundTicket` is true, we move to the `done` state
+  - if `foundTicket` is false, we move to the `noResults` state
+
+### Here's one way to render component per state
+
+Rendering a component based on the current state is great.
+
+Here's one of the many ways you could choose to render a component
+or pass different props based on the `currentState` of the app.
+Again:
+`currentState` here refers to the app state "isLoading, error, etc."
+`currentState.context` refers to the stateful data that currently have
 
 ```jsx
-
-// components/Choices.jsx
-const Choices = ({ currentState, ...props}) => (
-  // based on current state, get a function from `stateRenders`
-  // and render it with the props we have
-  const [stateName, renderState] =
-      stateRenderers.find(([key]) => currentState.matches(key));
-
-  return renderState(props);
-)
-
 /**
  * Array of
  * [].<StateName, function>
@@ -301,8 +391,87 @@ const stateRenderers = [
   [`${findTicket}.${noResults}`, () =>
     <Msg>Sorry, we can't find your ticket</Msg>],
 
-  [`${findTicket}.${error}`, () => <Mgs>Ooops, we ran into an error!</Msg>],
+  [`${findTicket}.${error}`, () => <Mgs>Oops, we ran into an error!</Msg>],
 
   [findTicket, ({ onSelect }) => <FindTicketForm onSelect={onSelect} />]
 ];
+
+// components/Choices.jsx
+const Choices = ({ currentState, ...props}) => (
+  // based on current state, get a function from `stateRenders`
+  // and render it with the props we have
+  const [stateName, renderState] =
+      stateRenderers.find(([key]) => currentState.matches(key));
+
+  return renderState(props);
+)
 ```
+
+### And here's...
+
+![!image](https://media.giphy.com/media/5OWLUbuMq4YXEl2ECg/giphy.gif)
+
+Here's a different setup to display components based on current
+app state.
+
+Something to note here. `currentState` is only one thing
+at a time, so you're not doing boolean checks here of
+`isLoading` vs. `error`
+
+```jsx
+<ChatBody data-testid="ChatBody">
+  // display any chat info that exists in context
+  {currentState.context.chat.map(({ question, answer }) => (
+    <React.Fragment key={`${question}.${answer}`}>
+      <ChatMsgQuestion>{question}</ChatMsgQuestion>
+      {answer && <ChatMsgAnswer>{answer}</ChatMsgAnswer>}
+    </React.Fragment>
+  ))}
+  // display message based on the current state that we're in // NOTE: only one
+  of this is possible at a time
+  {currentState.matches(pending) && <ChatMsgLoading />}
+  {currentState.matches(error) && <ChatMsgError />}
+  {currentState.matches(noResults) && (
+    <ChatMsgWarning>{getNoResultsMsg(currentState)}</ChatMsgWarning>
+  )}
+  {currentState.matches(itemOrdered) && (
+    <ChatMsgSuccess>{getSuccessMsg(currentState)}</ChatMsgSuccess>
+  )}
+</ChatBody>
+```
+
+### Takeaways
+
+Alright... hopefully you've made it this far.
+Check out the code for some more stuff.
+
+I think this builds nicely on top of the `redux` patterns that have been working out like message passing, one flow direction, separation of data management from components.
+
+I've found it surprisingly easy to adjust to requirement changes using this pattern.
+
+It has gone something like this:
+
+1. spec changes
+2. adjust state machine config first
+3. reflect the new state in the UI
+
+> "okay, we just need to get to this new state. Once we're in that state, we just need to make the UI reflect what that specific state should like"
+
+### Opinions
+
+1. Does this replace redux?
+   Yup. But the redux patterns are still applicable.
+
+- Have a place that reduces your data based on an event
+- Data flows one way
+- separate APIs
+
+2. What about prop-drilling?
+
+- I think the issue is overblown.
+- You could break out your components a bit better or use react.context
+
+### Recommended reading
+
+https://xstate.js.org
+https://statecharts.github.io

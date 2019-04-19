@@ -17,42 +17,38 @@ import {
   shouldShowSuccessMsg,
   getSuccessMsg
 } from './Ticket.utils';
-import FontSelector from '../FontSelector';
 
 const propTypes = {
   currentState: instanceOf(State).isRequired
 };
 
 const Ticket = ({ currentState, onSelect }) => (
-  <React.Fragment>
-    <Section>
-      <ChatContainer>
-        <ChatBodyContainer>
-          <ChatBody data-testid="ChatBody">
-            {currentState.context.chat.map(({ question, answer }) => (
-              <React.Fragment key={`${question}.${answer}`}>
-                <ChatMsgQuestion>{question}</ChatMsgQuestion>
-                {answer && <ChatMsgAnswer>{answer}</ChatMsgAnswer>}
-              </React.Fragment>
-            ))}
+  <Section>
+    <ChatContainer>
+      <ChatBodyContainer>
+        <ChatBody data-testid="ChatBody">
+          {currentState.context.chat.map(({ question, answer }) => (
+            <React.Fragment key={`${question}.${answer}`}>
+              <ChatMsgQuestion>{question}</ChatMsgQuestion>
+              {answer && <ChatMsgAnswer>{answer}</ChatMsgAnswer>}
+            </React.Fragment>
+          ))}
 
-            {shouldShowLoading(currentState) && <ChatMsgLoading />}
-            {shouldShowErrorMsg(currentState) && <ChatMsgError />}
+          {shouldShowLoading(currentState) && <ChatMsgLoading />}
+          {shouldShowErrorMsg(currentState) && <ChatMsgError />}
 
-            {shouldShowNoResultsMsg(currentState) && (
-              <ChatMsgWarning>{getNoResultsMsg(currentState)}</ChatMsgWarning>
-            )}
+          {shouldShowNoResultsMsg(currentState) && (
+            <ChatMsgWarning>{getNoResultsMsg(currentState)}</ChatMsgWarning>
+          )}
 
-            {shouldShowSuccessMsg(currentState) && (
-              <ChatMsgSuccess>{getSuccessMsg(currentState)}</ChatMsgSuccess>
-            )}
-          </ChatBody>
-        </ChatBodyContainer>
-        <ChatFooter onSelect={onSelect} currentState={currentState} />
-      </ChatContainer>
-    </Section>
-    {/* <FontSelector /> */}
-  </React.Fragment>
+          {shouldShowSuccessMsg(currentState) && (
+            <ChatMsgSuccess>{getSuccessMsg(currentState)}</ChatMsgSuccess>
+          )}
+        </ChatBody>
+      </ChatBodyContainer>
+      <ChatFooter onSelect={onSelect} currentState={currentState} />
+    </ChatContainer>
+  </Section>
 );
 
 Ticket.propTypes = propTypes;

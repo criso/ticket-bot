@@ -11,7 +11,7 @@ const OrderStillProcessing = ({
 }) => (
   <Section>
     <div>
-      Your <strong>{item}</strong> order is still processing.
+      Your <strong>{item}</strong> order is still being processed.
     </div>
 
     {pingSent && <SentPing />}
