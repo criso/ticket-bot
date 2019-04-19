@@ -2,7 +2,7 @@ This repo contains the code for this blog post, on which we go over what state m
 
 It uses Xstate(statecharts) and reactJS to build a chat bot flow.
 
-![flow](/assets/flow.gif)
+![flow](https://github.com/criso/ticket-bot/blob/master/blog/assets/flow.gif?raw=true)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
